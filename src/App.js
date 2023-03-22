@@ -1,23 +1,33 @@
-// import logo from './logo.svg';
-// import './App.css';
-// import React, { useState } from "react";
-// import axios from "axios";
-// import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-// import Register from './register';
-// import Subscriber from './Subscriber';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
+import Login from './components/Login';
+import Register from './components/Register';
+import ImageUpload from './components/ImageUpload';
 
-// function App() {
-//   return (
-//     <Router>
-//       <div className="App">
-//         <Switch>
-//           <Route exact path="/" component={Register} />
-//           <Route path="/subscriber" component={Subscriber} />
-//         </Switch>
-//       </div>
-//     </Router>
-//   );
-// }
+function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
 
-// export default App;
+  const handleLogout = () => {
+    setLoggedIn(false);
+  };
 
+  return (
+    <Router>
+      <div className="App-header">
+        <h1>Cat Pain Detector</h1>
+        {!loggedIn && (
+          <nav>
+            <Link to="/login">Login</Link> | <Link to="/register">Register</Link>
+          </nav>
+        )}
+        <Routes>
+          <Route path="/login" element={loggedIn ? <Navigate to="/" /> : <Login onLogin={() => setLoggedIn(true)} />} />
+          <Route path="/register" element={loggedIn ? <Navigate to="/" /> : <Register />} />
+          <Route path="/" element={loggedIn ? <ImageUpload onLogout={handleLogout} /> : <Navigate to="/login" />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default App;
