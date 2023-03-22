@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
-import Login from './components/Login';
-import Register from './components/Register';
-import ImageUpload from './components/ImageUpload';
+import Login from './Login';
+import Register from './Register';
+import ImageUpload from './ImageUpload';
+import './App.css'; // Keep this line
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
