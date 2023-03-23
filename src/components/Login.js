@@ -8,15 +8,12 @@ const Login = ({ onLogin }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/login', { email, password });
-      if (response.data.success) {
-        onLogin();
-      } else {
-        alert(response.data.message);
-      }
+      await axios.post('http://localhost:5000/login', { email, password });
+      onLogin(email);
+      alert('Logged in successfully.');
     } catch (error) {
-      console.error('Error during login:', error);
-      alert('Error during login.');
+      console.error('Error logging in:', error);
+      alert('Error logging in.');
     }
   };
 

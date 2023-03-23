@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Camera from './Camera';
 
-const ImageUpload = ({ onLogout }) => {
+const ImageUpload = ({ onLogout, userEmail }) => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [showCamera, setShowCamera] = useState(true);
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+  const handleCapture = (blob) => {
+    setSelectedFile(blob);
+    setShowCamera(false);
+  };
+
+  const handleRetake = () => {
+    setSelectedFile(null);
   };
 
   const handleSubmit = async (event) => {
@@ -23,16 +30,25 @@ const ImageUpload = ({ onLogout }) => {
   };
 
   return (
-    <div>
+    <div style={{ textAlign: 'center' }}>
       <h2>Upload Image</h2>
+      {selectedFile ? (
+        <>
+          <img className="preview-image" src={URL.createObjectURL(selectedFile)} alt="Selected file" />
+          <div style={{ margin: '10px' }}>
+            <button onClick={handleRetake} className="app-button">Retake</button>
+          </div>
+        </>
+      ) : (
+        <Camera onCapture={handleCapture} userEmail={userEmail} />
+      )}
       <form className='register-form' onSubmit={handleSubmit}>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-        <button type="submit" className="app-button">Upload</button>
+        <input type="file" accept="image/*" onChange={(event) => setSelectedFile(event.target.files[0]) } />
+        <button type="submit" className="app-button" disabled={!selectedFile}>Upload</button>
       </form>
-      <button onClick={onLogout} className="app-button">Logout</button>
+      <button onClick={onLogout} className="Logout-button">Logout</button>
     </div>
   );
-  
 };
 
 export default ImageUpload;
