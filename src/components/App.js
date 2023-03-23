@@ -3,13 +3,20 @@ import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-ro
 import Login from './Login';
 import Register from './Register';
 import ImageUpload from './ImageUpload';
-import './App.css'; // Keep this line
+import './App.css';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+
+  const handleLogin = (email) => {
+    setLoggedIn(true);
+    setUserEmail(email);
+  };
 
   const handleLogout = () => {
     setLoggedIn(false);
+    setUserEmail('');
   };
 
   return (
@@ -22,9 +29,9 @@ function App() {
           </nav>
         )}
         <Routes>
-          <Route path="/login" element={loggedIn ? <Navigate to="/" /> : <Login onLogin={() => setLoggedIn(true)} />} />
+          <Route path="/login" element={loggedIn ? <Navigate to="/" /> : <Login onLogin={handleLogin} />} />
           <Route path="/register" element={loggedIn ? <Navigate to="/" /> : <Register />} />
-          <Route path="/" element={loggedIn ? <ImageUpload onLogout={handleLogout} /> : <Navigate to="/login" />} />
+          <Route path="/" element={loggedIn ? <ImageUpload onLogout={handleLogout} userEmail={userEmail} /> : <Navigate to="/login" />} />
         </Routes>
       </div>
     </Router>
