@@ -177,3 +177,19 @@ button:hover {
   max-height: 300px;
   object-fit: contain;
 }
+
+.face-detection-box {
+  position: absolute;
+  pointer-events: none;
+}
+
+.video-container {
+  position: relative;
+  display: inline-block;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
