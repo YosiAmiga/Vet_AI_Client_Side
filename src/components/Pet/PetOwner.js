@@ -22,12 +22,12 @@ const PetOwner = ({ onLogout, userEmail }) => {
       const response = await axios.post('http://localhost:5000/get-user-pets', { userEmail });
       console.log('response', response.data);
       const petsList = response.data.map((petData) => ({
-        pet_id: petData[0],
-        ownerEmail: petData[1],
-        type: petData[2],
-        name: petData[3],
-        dob: petData[4],
-        image: 'https://via.placeholder.com/150',
+        pet_id: petData.pet_id,
+        ownerEmail: petData.ownerEmail,
+        type: petData.type,
+        name: petData.name,
+        dob: petData.dob,
+        image: petData.image,
       }));
       setPetsList(petsList);
     } catch (error) {

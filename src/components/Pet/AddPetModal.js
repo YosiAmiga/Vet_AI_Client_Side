@@ -12,6 +12,7 @@ const AddPetModal = ({ show, onHide, userEmail, onPetAdded }) => {
   const [petName, setPetName] = useState('');
   const [petDob, setPetDob] = useState('');
   const [petTypes, setPetTypes] = useState([]);
+  const [petPhoto, setPetPhoto] = useState(null);
 
   /**
    * Handle form submission.
@@ -19,14 +20,18 @@ const AddPetModal = ({ show, onHide, userEmail, onPetAdded }) => {
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    const formData = new FormData();
+    formData.append('owner_email', userEmail);
+    formData.append('pet_type', petType);
+    formData.append('pet_name', petName);
+    formData.append('pet_dob', petDob.split('-').reverse().join('/'));
+    formData.append('pet_photo', petPhoto);
     try {
-      const response = await axios.post('http://localhost:5000/add-new-pet', {
-        owner_email: userEmail,
-        pet_type: petType,
-        pet_name: petName,
-        pet_dob: petDob.split('-').reverse().join('/'), // Convert date format to 'day/month/year'
-      });
+        const response = await axios.post('http://localhost:5000/add-new-pet', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
   
       if (response.data.success) {
         alert('New pet added successfully');
@@ -102,7 +107,10 @@ const AddPetModal = ({ show, onHide, userEmail, onPetAdded }) => {
           </Form.Group>
           <Form.Group>
             <Form.Label>Photo (optional)</Form.Label>
-            <Form.Control type="file" />
+            <Form.Control
+                type="file"
+                onChange={(e) => setPetPhoto(e.target.files[0])}
+            />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
