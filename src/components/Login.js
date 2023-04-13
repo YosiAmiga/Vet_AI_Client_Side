@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { SERVER_IP } from './App';
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -8,7 +9,7 @@ const Login = ({ onLogin }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/login', { email, password });
+      const response = await axios.post(SERVER_IP + ':5000/login', { email, password });
       if (response.data.success) {
         onLogin(email);
         alert('Logged in successfully.');

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import axios from 'axios';
+import { SERVER_IP } from '../App';
 
 /**
  * This component is a modal that allows the user to add a new pet.
@@ -27,7 +28,7 @@ const AddPetModal = ({ show, onHide, userEmail, onPetAdded }) => {
     formData.append('pet_dob', petDob.split('-').reverse().join('/'));
     formData.append('pet_photo', petPhoto);
     try {
-        const response = await axios.post('http://localhost:5000/add-new-pet', formData, {
+        const response = await axios.post(SERVER_IP + ':5000/add-new-pet', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -59,7 +60,7 @@ const AddPetModal = ({ show, onHide, userEmail, onPetAdded }) => {
    */
   const initPetTypes = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/get-pet-types');
+      const response = await axios.post(SERVER_IP + ':5000/get-pet-types');
       setPetTypes(response.data);
     } catch (error) {
       console.error('Error in initPetTypes', error);

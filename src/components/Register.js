@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import { SERVER_IP } from './App';
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -8,7 +8,7 @@ const Register = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/register', { email, password });
+      const response = await axios.post(SERVER_IP + ':5000/register', { email, password });
       if (response.data.success) {
         alert('Registration successful. You can now log in.');
       } else {

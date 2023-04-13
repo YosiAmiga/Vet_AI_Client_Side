@@ -4,6 +4,7 @@ import PetCard from './PetCard';
 import AddPetModal from './AddPetModal';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
+import { SERVER_IP } from '../App';
 
 /**
  * This component is the pet owner page.
@@ -19,7 +20,7 @@ const PetOwner = ({ onLogout, userEmail }) => {
    */
   const initOwnerPets = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/get-user-pets', { userEmail });
+      const response = await axios.post(SERVER_IP + ':5000/get-user-pets', { userEmail });
       console.log('response', response.data);
       const petsList = response.data.map((petData) => ({
         pet_id: petData.pet_id,
