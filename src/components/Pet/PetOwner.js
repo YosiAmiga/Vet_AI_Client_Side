@@ -60,7 +60,7 @@ const PetOwner = ({ onLogout, userEmail }) => {
         {petsList.map((pet) => (
           <PetCard key={pet.pet_id} pet={pet}>
             <Link to={`/image-upload`}>
-              <button>Go to Image Upload</button>
+              <Button>Go to Image Upload</Button>
             </Link>
           </PetCard>
         ))}

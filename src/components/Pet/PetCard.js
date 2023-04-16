@@ -22,7 +22,7 @@ const PetCard = ({ pet, children }) => {
           </Card>
         </div>
         <Modal show={modalShow} onHide={() => setModalShow(false)} centered>
-          <Modal.Header closeButton>
+          <Modal.Header>
             <Modal.Title>{pet.name}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
