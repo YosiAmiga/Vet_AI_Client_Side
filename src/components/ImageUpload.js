@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Camera from './Camera';
-
+import { SERVER_IP } from './App.js';
 /**
  * Renders a component for uploading images. Allows the user to select an image file or capture an image with their camera.
  * @param {Function} onLogout - Callback function to handle user logout.
@@ -41,7 +41,7 @@ const ImageUpload = ({ onLogout, userEmail }) => {
     formData.append('file', selectedFile);
 
     try {
-      await axios.post('http://localhost:5000/upload', formData);
+      await axios.post(SERVER_IP + ':5000/upload', formData);
       alert('File uploaded successfully.');
     } catch (error) {
       console.error('Error uploading file:', error);

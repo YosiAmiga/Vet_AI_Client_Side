@@ -4,7 +4,10 @@ import Login from './Login';
 import Register from './Register';
 import ImageUpload from './ImageUpload';
 import './App.css';
-
+import PetOwner from './Pet/PetOwner';
+//export const SERVER_IP = 'http://localhost';
+export const SERVER_IP = 'http://10.0.0.14';
+//export const SERVER_IP = 'http://147.235.220.189';
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState('');
@@ -31,7 +34,8 @@ function App() {
         <Routes>
           <Route path="/login" element={loggedIn ? <Navigate to="/" /> : <Login onLogin={handleLogin} />} />
           <Route path="/register" element={loggedIn ? <Navigate to="/" /> : <Register />} />
-          <Route path="/" element={loggedIn ? <ImageUpload onLogout={handleLogout} userEmail={userEmail} /> : <Navigate to="/login" />} />
+          <Route path="/" element={loggedIn ? <PetOwner onLogout={handleLogout} userEmail={userEmail}/> : <Navigate to="/login" />} />
+          <Route path="/image-upload" element={loggedIn ? <ImageUpload onLogout={handleLogout} userEmail={userEmail}/> : <Navigate to="/login" />} />
         </Routes>
       </div>
     </Router>
