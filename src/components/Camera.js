@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as faceapi from 'face-api.js';
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 
 /**
  * Camera component that allows the user to take pictures using the device's camera.
@@ -158,7 +159,7 @@ const Camera = ({ userEmail, onAutoCapture, onVideoCapture }) => {
       const blob = new Blob(chunks, { type: 'video/webm' });
       setCapturedVideo(blob);
       setMediaRecorder(null);
-      //onVideoCapture(blob); // Add this line
+      onVideoCapture(blob);
     };
 
     mediaRecorder.start(1000);
@@ -170,13 +171,33 @@ const Camera = ({ userEmail, onAutoCapture, onVideoCapture }) => {
    * @description Stops recording a video from the camera stream.
    * @returns {void}
    */
-  const stopRecording = () => {
+  const stopRecording = async () => {
     if (mediaRecorder && mediaRecorder.state === 'recording') {
       mediaRecorder.stop();
       setIsRecording(false);
       setCameraActive(false);
+  
+      // Convert WebM to MP4 using ffmpeg
+      const ffmpeg = createFFmpeg({ log: true });
+      await ffmpeg.load();
+      const webmFileName = 'input.webm';
+      const mp4FileName = 'output.mp4';
+      await ffmpeg.write(webmFileName, await fetchFile(capturedVideo));
+      await ffmpeg.transcode(webmFileName, mp4FileName);
+      const mp4Data = ffmpeg.read(mp4FileName);
+      const mp4Blob = new Blob([mp4Data.buffer], { type: 'video/mp4' });
+  
+      // Convert the MP4 Blob to a File object
+      const timestamp = new Date().toLocaleString('en-US').replace(/[/,:]/g, '-');
+      const fileName = `${userEmail}_${timestamp}.mp4`;
+      const mp4File = new File([mp4Blob], fileName, { type: 'video/mp4' });
+      mp4File.fileName =
+      // Update the capturedVideo state and call onVideoCapture with the MP4 File
+      setCapturedVideo(mp4File);
+      onVideoCapture(mp4File);
     }
   };
+  
 
   return (
     <div style={{ textAlign: 'center' }}>

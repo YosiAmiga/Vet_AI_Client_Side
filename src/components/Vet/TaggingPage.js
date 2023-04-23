@@ -13,6 +13,15 @@ const TaggingPage = ({ onLogout, userEmail }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [showCamera, setShowCamera] = useState(true);
   const [tag, setTag] = useState(null);
+  const [capturedVideo, setCapturedVideo] = useState(null);
+
+  /**
+   * Handles the video capture event from the camera component. Sets the captured video blob to state and hides the camera component.
+   */
+    const handleVideoCapture = (file) => {
+      setSelectedFile(file);
+      setShowCamera(false);
+    };
 
   /**
    * Handles the video capture event from the camera component. Sets the captured video blob to state and hides the camera component.
@@ -53,7 +62,7 @@ const TaggingPage = ({ onLogout, userEmail }) => {
   };
   
 
-  return(
+  return (
     <div style={{ textAlign: 'center' }}>
       <h2>Tagging Page</h2>
       {selectedFile ? (
@@ -64,16 +73,16 @@ const TaggingPage = ({ onLogout, userEmail }) => {
           </div>
         </>
       ) : (
-        <Camera onAutoCapture={handleCapture} userEmail={userEmail} />
+        <Camera onAutoCapture={handleCapture} userEmail={userEmail} onVideoCapture={(video) => setCapturedVideo(video)} />
       )}
-      <form className='register-form' onSubmit={handleSubmit}>
+      <form className="register-form" onSubmit={handleSubmit}>
         <input
           type="file"
-          accept="image/*"
+          accept="image/*, video/*"
           onChange={(event) => setSelectedFile(event.target.files[0])}
         />
         <div>
-          <label style={{ color: 'red' }}> 
+          <label style={{ color: 'red' }}>
             <input
               type="radio"
               value="Pain"
@@ -82,7 +91,7 @@ const TaggingPage = ({ onLogout, userEmail }) => {
             />
             Pain
           </label>
-          <label style={{ color: 'green'}}>
+          <label style={{ color: 'green' }}>
             <input
               type="radio"
               value="No Pain"
@@ -97,6 +106,7 @@ const TaggingPage = ({ onLogout, userEmail }) => {
       <button className="Logout-button" onClick={onLogout}>Logout</button>
     </div>
   );
+  
 };
 
 export default TaggingPage;
