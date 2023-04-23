@@ -11,7 +11,17 @@ import { SERVER_IP } from './App.js';
 const ImageUpload = ({ onLogout, userEmail }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [showCamera, setShowCamera] = useState(true);
+  const [capturedVideo, setCapturedVideo] = useState(null);
 
+  /**
+   * Handles the video capture event from the camera component. Sets the captured video blob to state and hides the camera component.
+   * @param {*} blob 
+   */
+  const handleVideoCapture = (blob) => {
+    setCapturedVideo(blob);
+    setShowCamera(false);
+  };
+  
   /**
    * Sets the selected file to the captured image blob and hides the camera component.
    * @param {Blob} blob - The blob of the captured image.
@@ -28,6 +38,7 @@ const ImageUpload = ({ onLogout, userEmail }) => {
    */
   const handleRetake = () => {
     setSelectedFile(null);
+    setCapturedVideo(null);
   };
 
   /**
@@ -59,8 +70,19 @@ const ImageUpload = ({ onLogout, userEmail }) => {
             <button onClick={handleRetake} className="app-button">Retake</button>
           </div>
         </>
+      ) : capturedVideo ? (
+        <>
+          <video
+            src={URL.createObjectURL(capturedVideo)}
+            controls
+            style={{ marginTop: '8px' }}
+          ></video>
+          <div style={{ margin: '10px' }}>
+            <button onClick={handleRetake} className="app-button">Retake</button>
+          </div>
+        </>
       ) : (
-        <Camera onAutoCapture={handleCapture} userEmail={userEmail} />
+        <Camera onAutoCapture={handleCapture} userEmail={userEmail} onVideoCapture={handleVideoCapture} />
       )}
       <form className='register-form' onSubmit={handleSubmit}>
         <input type="file" accept="image/*" onChange={(event) => setSelectedFile(event.target.files[0]) } />
