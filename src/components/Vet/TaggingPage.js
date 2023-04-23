@@ -3,33 +3,46 @@ import axios from 'axios';
 import Camera from '../Camera';
 import { SERVER_IP } from '../App';
 
+/**
+ * Tagging page for vets
+ * @param {Function} onLogout - Callback function to handle user logout.
+ * @param {string} userEmail - The email address of the currently logged in user.
+ * @returns {JSX.Element} - A JSX element that has a camera component, a form to upload the selected file, and a form to tag the selected file.
+ */
 const TaggingPage = ({ onLogout, userEmail }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [showCamera, setShowCamera] = useState(true);
   const [tag, setTag] = useState(null);
 
+  /**
+   * Handles the video capture event from the camera component. Sets the captured video blob to state and hides the camera component.
+   * @param {*} blob 
+   */
   const handleCapture = (blob) => {
     setSelectedFile(blob);
     setShowCamera(false);
   };
 
+  /**
+   * Handles the retake button click event. Sets the selected file to null and shows the camera component.
+   */
   const handleRetake = () => {
     setSelectedFile(null);
   };
 
+  /**
+   * Handles the form submission event. Submits the selected file to the server for upload.
+   * @param {*} event 
+   */
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
     const timestamp = new Date().toLocaleString('en-US').replace(/[/,:]/g, '-');
     const fileName = `${userEmail}_${timestamp}.jpeg`;
-  
     const formData = new FormData();
     formData.append('image', selectedFile, fileName);
     formData.append('vet_email', userEmail);
     formData.append('tag', tag);
-  
-    console.log(formData);
-  
+
     try {
       await axios.post(`${SERVER_IP}:5000/vet-upload`, formData);
       alert('File uploaded and tagged successfully.');

@@ -1,7 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Modal, Form } from 'react-bootstrap';
 
+/**
+ * The vet page, contains links to the tagging page and image upload page
+ * @param {Function} onLogout - Callback function to handle user logout.
+ * @param {string} userEmail - The email address of the currently logged in user.
+ * @returns {JSX.Element} the vet page component
+ */
 const VetPage = ({ onLogout, userEmail }) => {
   return (
     <div style={{ textAlign: 'center' }}>

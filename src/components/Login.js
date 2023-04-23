@@ -2,10 +2,19 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { SERVER_IP } from './App';
 
+/**
+ * The Login component renders a form for logging in. It takes an onLogin callback function as a prop to handle the login event.
+ * @param {Function} onLogin - Callback function to handle user login.
+ * @returns {JSX.Element} - A JSX element that renders a login form.
+ */
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  /**
+   * Handles the form submission event. Sends a POST request to the server to log in the user.
+   * @param {*} event - The form submission event.
+   */
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {

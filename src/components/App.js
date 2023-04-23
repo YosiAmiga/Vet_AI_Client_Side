@@ -15,12 +15,20 @@ function App() {
   const [userEmail, setUserEmail] = useState('');
   const [userType, setUserType] = useState(null);
 
+  /**
+   * login handler, sets the state of the app to logged in
+   * @param {*} email 
+   * @param {*} userType 
+   */
   const handleLogin = (email, userType) => {
     setLoggedIn(true);
     setUserEmail(email);
     setUserType(userType);
   };
 
+  /**
+   * logout handler, sets the state of the app to logged out
+   */
   const handleLogout = () => {
     setLoggedIn(false);
     setUserEmail('');
