@@ -11,7 +11,7 @@ const Login = ({ onLogin }) => {
     try {
       const response = await axios.post(SERVER_IP + ':5000/login', { email, password });
       if (response.data.success) {
-        onLogin(email);
+        onLogin(email, response.data.user_type); // Pass user_type to the onLogin function
         alert('Logged in successfully.');
       } else {
         alert(response.data.message);
