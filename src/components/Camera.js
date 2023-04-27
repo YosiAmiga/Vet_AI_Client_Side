@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as faceapi from 'face-api.js';
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 
 /**
  * Camera component that allows the user to take pictures using the device's camera.
@@ -10,11 +11,15 @@ import * as faceapi from 'face-api.js';
  * @param {function} props.onAutoCapture - Callback function to be called when a picture is automatically taken by the camera.
  * @returns {JSX.Element} - Camera component.
  */
-const Camera = ({ userEmail, onAutoCapture }) => {
+const Camera = ({ userEmail, onAutoCapture, onVideoCapture }) => {
   const videoRef = useRef(null);
   const [stream, setStream] = useState(null);
   const [cameraActive, setCameraActive] = useState(false);
   const faceDetectionTimeout = useRef(null); // Add this line
+  const [autoCaptureActive, setAutoCaptureActive] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState(null);
+  const [capturedVideo, setCapturedVideo] = useState(null);
 
   /**
    * Load the face detection models from the face-api.js library when the component mounts.
@@ -52,11 +57,8 @@ const Camera = ({ userEmail, onAutoCapture }) => {
       faceapi.matchDimensions(canvas, displaySize);
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
       faceapi.draw.drawDetections(canvas, resizedDetections);
-      //For more features:
-      //faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-      //faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
-      // Capture the screenshot when the detection score is above 0.9
-      if (detections.score >= 0.99) {
+      console.log('In detect face autoCaptureActive:', autoCaptureActive);
+      if (autoCaptureActive && detections.score >= 0.99) {
         handleAutoCapture();
       }
     }
@@ -72,13 +74,14 @@ const Camera = ({ userEmail, onAutoCapture }) => {
         clearInterval(interval);
       };
     }
-  }, [stream]);
+  }, [stream,autoCaptureActive]);
 
   /**
    * Automatically capture a picture from the camera and call the `onAutoCapture` callback.
    */
   const handleAutoCapture = () => {
     if (faceDetectionTimeout.current) clearTimeout(faceDetectionTimeout.current);
+    if (!autoCaptureActive) return;
 
     const canvas = document.createElement('canvas');
     canvas.width = videoRef.current.videoWidth;
@@ -102,14 +105,12 @@ const Camera = ({ userEmail, onAutoCapture }) => {
     } else {
       disableStream();
     }
-
+  
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
+      disableStream();
     };
   }, [cameraActive]);
-
+  
   /**
    * @description Enables the camera stream by requesting access to the user's camera and setting the stream to the video element.
    * @returns {Promise<void>}
@@ -130,10 +131,73 @@ const Camera = ({ userEmail, onAutoCapture }) => {
    */
   const disableStream = () => {
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach((track) => track.stop());
       setStream(null);
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
     }
   };
+  
+  /**
+   * @description Starts recording a video from the camera stream.
+   * @returns {void}
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder
+   */
+  const startRecording = () => {
+    const options = { mimeType: 'video/webm;codecs=vp9' };
+    const mediaRecorder = new MediaRecorder(stream, options);
+    const chunks = [];
+
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        chunks.push(event.data);
+      }
+    };
+
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(chunks, { type: 'video/webm' });
+      setCapturedVideo(blob);
+      setMediaRecorder(null);
+      onVideoCapture(blob);
+    };
+
+    mediaRecorder.start(1000);
+    setMediaRecorder(mediaRecorder);
+    setIsRecording(true);
+  };
+
+  /**
+   * @description Stops recording a video from the camera stream.
+   * @returns {void}
+   */
+  const stopRecording = async () => {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+      setIsRecording(false);
+      setCameraActive(false);
+  
+      // Convert WebM to MP4 using ffmpeg
+      const ffmpeg = createFFmpeg({ log: true });
+      await ffmpeg.load();
+      const webmFileName = 'input.webm';
+      const mp4FileName = 'output.mp4';
+      await ffmpeg.write(webmFileName, await fetchFile(capturedVideo));
+      await ffmpeg.transcode(webmFileName, mp4FileName);
+      const mp4Data = ffmpeg.read(mp4FileName);
+      const mp4Blob = new Blob([mp4Data.buffer], { type: 'video/mp4' });
+  
+      // Convert the MP4 Blob to a File object
+      const timestamp = new Date().toLocaleString('en-US').replace(/[/,:]/g, '-');
+      const fileName = `${userEmail}_${timestamp}.mp4`;
+      const mp4File = new File([mp4Blob], fileName, { type: 'video/mp4' });
+      mp4File.fileName =
+      // Update the capturedVideo state and call onVideoCapture with the MP4 File
+      setCapturedVideo(mp4File);
+      onVideoCapture(mp4File);
+    }
+  };
+  
 
   return (
     <div style={{ textAlign: 'center' }}>
@@ -145,7 +209,35 @@ const Camera = ({ userEmail, onAutoCapture }) => {
       <button onClick={() => setCameraActive(!cameraActive)} style={{ marginRight: '8px', marginTop: '8px' }}>
         {cameraActive? 'Close Camera' : 'Open Camera'}
         </button>
+        {cameraActive && (
+          <>
+            <button className= {autoCaptureActive ? "Logout-button" : "app-button"}  onClick={() => setAutoCaptureActive(!autoCaptureActive)} style={{ marginRight: '8px', marginTop: '8px' }}>
+              {autoCaptureActive ? 'Stop Auto Snapshot' : 'Automatic Face Snapshot'}
+            </button>
+            {!isRecording ? (
+              <button className="app-button" onClick={startRecording} style={{ marginTop: '8px' }}>
+                Start Recording
+              </button>
+            ) : (
+              <button className="Logout-button" onClick={stopRecording} style={{ marginTop: '8px' }}>
+                Stop Recording
+              </button>
+            )}
+          </>
+        )}
       </div>
+      {capturedVideo && (
+        <div>
+          <video
+            src={URL.createObjectURL(capturedVideo)}
+            controls
+            style={{ marginTop: '8px' }}
+          ></video>
+          <button onClick={() => setCapturedVideo(null)} className="app-button" style={{ marginTop: '8px' }}>
+            Retake
+          </button>
+        </div>
+      )}
     </div>
   );
 };

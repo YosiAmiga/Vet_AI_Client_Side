@@ -11,7 +11,16 @@ import { SERVER_IP } from './App.js';
 const ImageUpload = ({ onLogout, userEmail }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [showCamera, setShowCamera] = useState(true);
+  const [capturedVideo, setCapturedVideo] = useState(null);
 
+  /**
+   * Handles the video capture event from the camera component. Sets the captured video blob to state and hides the camera component.
+   */
+  const handleVideoCapture = (file) => {
+    setSelectedFile(file);
+    setShowCamera(false);
+  };
+  
   /**
    * Sets the selected file to the captured image blob and hides the camera component.
    * @param {Blob} blob - The blob of the captured image.
@@ -28,6 +37,7 @@ const ImageUpload = ({ onLogout, userEmail }) => {
    */
   const handleRetake = () => {
     setSelectedFile(null);
+    setCapturedVideo(null);
   };
 
   /**
@@ -48,22 +58,36 @@ const ImageUpload = ({ onLogout, userEmail }) => {
       alert('Error uploading file.');
     }
   };
+  
 
   return (
     <div style={{ textAlign: 'center' }}>
       <h2>Upload Image</h2>
       {selectedFile ? (
-        <>
-          <img className="preview-image" src={URL.createObjectURL(selectedFile)} alt="Selected file" />
-          <div style={{ margin: '10px' }}>
-            <button onClick={handleRetake} className="app-button">Retake</button>
-          </div>
-        </>
+        selectedFile.type.startsWith('image/') ? (
+          <>
+            <img className="preview-image" src={URL.createObjectURL(selectedFile)} alt="Selected file" />
+            <div style={{ margin: '10px' }}>
+              <button onClick={handleRetake} className="app-button">Retake</button>
+            </div>
+          </>
+        ) : (
+          <>
+            <video
+              src={URL.createObjectURL(selectedFile)}
+              controls
+              style={{ marginTop: '8px' }}
+            ></video>
+            <div style={{ margin: '10px' }}>
+              <button onClick={handleRetake} className="app-button">Retake</button>
+            </div>
+          </>
+        )
       ) : (
-        <Camera onAutoCapture={handleCapture} userEmail={userEmail} />
+        <Camera onAutoCapture={handleCapture} userEmail={userEmail} onVideoCapture={handleVideoCapture} />
       )}
       <form className='register-form' onSubmit={handleSubmit}>
-        <input type="file" accept="image/*" onChange={(event) => setSelectedFile(event.target.files[0]) } />
+        <input type="file" accept="image/*,video/*" onChange={(event) => setSelectedFile(event.target.files[0]) } />
         <button type="submit" className="app-button" disabled={!selectedFile}>Upload</button>
       </form>
       <button onClick={onLogout} className="Logout-button">Logout</button>
