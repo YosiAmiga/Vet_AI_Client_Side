@@ -90,7 +90,7 @@ const Camera = ({ userEmail, onAutoCapture, onVideoCapture }) => {
     context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
     canvas.toBlob((blob) => {
       const timestamp = new Date().toLocaleString('en-US').replace(/[/,:]/g, '-');
-      const fileName = `${userEmail}_${timestamp}.jpeg`;
+      const fileName = `${userEmail}&${timestamp}.jpeg`;
       onAutoCapture(new File([blob], fileName, { type: 'image/jpeg' }));
       disableStream();
     }, 'image/jpeg', 0.95);

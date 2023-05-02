@@ -51,8 +51,8 @@ const ImageUpload = ({ onLogout, userEmail }) => {
     formData.append('file', selectedFile);
 
     try {
-      await axios.post(SERVER_IP + ':5000/upload', formData);
-      alert('File uploaded successfully.');
+      const response = await axios.post(SERVER_IP + ':5000/upload', formData);
+      alert('File uploaded successfully. Emotion is: ' + response.data);
     } catch (error) {
       console.error('Error uploading file:', error);
       alert('Error uploading file.');

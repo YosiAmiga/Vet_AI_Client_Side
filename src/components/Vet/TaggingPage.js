@@ -46,7 +46,7 @@ const TaggingPage = ({ onLogout, userEmail }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const timestamp = new Date().toLocaleString('en-US').replace(/[/,:]/g, '-');
-    const fileName = `${userEmail}_${timestamp}.jpeg`;
+    const fileName = `${userEmail}&${timestamp}.jpeg`;
     const formData = new FormData();
     formData.append('image', selectedFile, fileName);
     formData.append('vet_email', userEmail);
