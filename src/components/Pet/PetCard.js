@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Button, Modal, Tab, Tabs } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import PredictionsTable from './PredictionsTable';
 
 /**
  * PetCard component displays pet information in a card with personal data and history tabs.
@@ -9,7 +10,7 @@ import PropTypes from 'prop-types';
  */
 const PetCard = ({ pet, children }) => {
     const [modalShow, setModalShow] = useState(false);
-  
+    console.log('pet in PetCard', pet);
     return (
       <>
         <div className="pet-card-wrapper">
@@ -33,7 +34,7 @@ const PetCard = ({ pet, children }) => {
                 <p>Owner Email: {pet.ownerEmail}</p>
               </Tab>
               <Tab eventKey="history" title="History">
-                <p>Pet history will be displayed here.</p>
+                <PredictionsTable petId={pet.pet_id} />
               </Tab>
             </Tabs>
           </Modal.Body>

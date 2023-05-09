@@ -157,6 +157,9 @@ const Camera = ({ userEmail, onAutoCapture, onVideoCapture }) => {
 
     mediaRecorder.onstop = () => {
       const blob = new Blob(chunks, { type: 'video/webm' });
+      const timestamp = new Date().toLocaleString('en-US').replace(/[/,:]/g, '-');
+      const fileName = `${userEmail}&${timestamp}.mp4`;
+      blob.name = fileName;
       setCapturedVideo(blob);
       setMediaRecorder(null);
       onVideoCapture(blob);
@@ -186,12 +189,14 @@ const Camera = ({ userEmail, onAutoCapture, onVideoCapture }) => {
       await ffmpeg.transcode(webmFileName, mp4FileName);
       const mp4Data = ffmpeg.read(mp4FileName);
       const mp4Blob = new Blob([mp4Data.buffer], { type: 'video/mp4' });
-  
+      mp4Blob.name = "mp4Blob name";
+
       // Convert the MP4 Blob to a File object
       const timestamp = new Date().toLocaleString('en-US').replace(/[/,:]/g, '-');
-      const fileName = `${userEmail}_${timestamp}.mp4`;
+      const fileName = `${userEmail}&${timestamp}.jpeg`;
       const mp4File = new File([mp4Blob], fileName, { type: 'video/mp4' });
-      mp4File.fileName =
+      mp4File.name = fileName;
+      console.log('mp4File name :', mp4File.name);
       // Update the capturedVideo state and call onVideoCapture with the MP4 File
       setCapturedVideo(mp4File);
       onVideoCapture(mp4File);
