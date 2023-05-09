@@ -5,6 +5,7 @@ import AddPetModal from './AddPetModal';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import { SERVER_IP } from '../App';
+import Plot from 'react-plotly.js';
 
 /**
  * This component is the pet owner page.
