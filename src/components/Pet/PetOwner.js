@@ -5,6 +5,7 @@ import AddPetModal from './AddPetModal';
 import axios from 'axios';
 import Button from 'react-bootstrap/Button';
 import { SERVER_IP } from '../App';
+import Plot from 'react-plotly.js';
 
 /**
  * This component is the pet owner page.
@@ -14,7 +15,7 @@ import { SERVER_IP } from '../App';
 const PetOwner = ({ onLogout, userEmail }) => {
   const [showAddPetModal, setShowAddPetModal] = useState(false);
   const [petsList, setPetsList] = useState([]);
-
+  const petName = "This is the pet name";
   /**
    * Initialize the owner's pets.
    */
@@ -51,7 +52,8 @@ const PetOwner = ({ onLogout, userEmail }) => {
     initOwnerPets();
   };
 
-  
+  console.log("Pet name in PetOwner:", petName);
+
   return (
     <div className="vertical-buttons">
       <h2>Pet Owner Page</h2>
@@ -59,7 +61,7 @@ const PetOwner = ({ onLogout, userEmail }) => {
       <div className="pet-list">
         {petsList.map((pet) => (
           <PetCard key={pet.pet_id} pet={pet}>
-            <Link to={`/image-upload`}>
+            <Link to={`/image-upload`} state={pet}>
               <Button>Go to Image Upload</Button>
             </Link>
           </PetCard>
