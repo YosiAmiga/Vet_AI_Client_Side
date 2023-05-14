@@ -7,8 +7,8 @@ import './App.css';
 import PetOwner from './Pet/PetOwner';
 import VetPage from './Vet/VetPage';
 import TaggingPage from './Vet/TaggingPage';
-//export const SERVER_IP = 'http://localhost';
-export const SERVER_IP = 'http://10.0.0.14';
+export const SERVER_IP = 'http://localhost';
+//export const SERVER_IP = 'http://10.0.0.14';
 //export const SERVER_IP = 'http://147.235.220.189';
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
