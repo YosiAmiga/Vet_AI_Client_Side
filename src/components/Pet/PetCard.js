@@ -19,7 +19,7 @@ const PetCard = ({ pet, children }) => {
             <Card.Img variant="top" src={pet.image} />
             <Card.Body>
               <Card.Title>{pet.name}</Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">{pet.type}</Card.Subtitle>
+              <Card.Subtitle className="mb-2 text-muted">{pet.name}</Card.Subtitle>
             </Card.Body>
           </Card>
         </div>
