@@ -54,7 +54,7 @@ const ImageUpload = ({ onLogout, userEmail}) => {
     event.preventDefault();
     const formData = new FormData();
     const timestamp = new Date().toLocaleString('en-US').replace(/[/,:]/g, '-');
-    const newName = `${userEmail}&${timestamp}.jpeg`;
+    const newName = selectedFile.type == "image/jpeg" ? `${userEmail}&${timestamp}.jpeg` : selectedFile.name;
     const newFile = new File([selectedFile], newName, { type: selectedFile.type });
     console.log('file ', newFile );
     formData.append('file', newFile);
