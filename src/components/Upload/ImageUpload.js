@@ -3,6 +3,7 @@ import axios from 'axios';
 import Camera from './Camera';
 import { SERVER_IP } from '../App.js';
 import { useLocation } from 'react-router-dom';
+import { BarLoader } from 'react-spinners';
 
 /**
  * Renders a component for uploading images. Allows the user to select an image file or capture an image with their camera.
@@ -14,6 +15,7 @@ const ImageUpload = ({ onLogout, userEmail}) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [showCamera, setShowCamera] = useState(true);
   const [capturedVideo, setCapturedVideo] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const location = useLocation();
   const pet = location?.state || '';
@@ -52,6 +54,7 @@ const ImageUpload = ({ onLogout, userEmail}) => {
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     const formData = new FormData();
     const timestamp = new Date().toLocaleString('en-US').replace(/[/,:]/g, '-');
     let extension;
@@ -71,42 +74,52 @@ const ImageUpload = ({ onLogout, userEmail}) => {
       console.error('Error uploading file:', error);
       alert('Error uploading file.');
     }
+    finally {
+      setLoading(false);
+    }
   };
   
 
   return (
     <div style={{ textAlign: 'center' }}>
       <h2>Upload Image</h2>
-      {selectedFile ? (
-        selectedFile.type.startsWith('image/') ? (
-          <>
-            <img className="preview-image" src={URL.createObjectURL(selectedFile)} alt="Selected file" />
-            <div style={{ margin: '10px' }}>
-              <button onClick={handleRetake} className="app-button">Retake</button>
-            </div>
-          </>
-        ) : (
-          <>
-            <video
-              src={URL.createObjectURL(selectedFile)}
-              controls
-              style={{ marginTop: '8px' }}
-            ></video>
-            <div style={{ margin: '10px' }}>
-              <button onClick={handleRetake} className="app-button">Retake</button>
-            </div>
-          </>
-        )
+      {loading ? (
+        <BarLoader color={'#123abc'} loading={loading} size={150} />
       ) : (
-        <Camera onAutoCapture={handleCapture} userEmail={userEmail} onVideoCapture={handleVideoCapture} />
+        <>
+          {selectedFile ? (
+            selectedFile.type.startsWith('image/') ? (
+              <>
+                <img className="preview-image" src={URL.createObjectURL(selectedFile)} alt="Selected file" />
+                <div style={{ margin: '10px' }}>
+                  <button onClick={handleRetake} className="app-button">Retake</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <video
+                  src={URL.createObjectURL(selectedFile)}
+                  controls
+                  style={{ marginTop: '8px' }}
+                ></video>
+                <div style={{ margin: '10px' }}>
+                  <button onClick={handleRetake} className="app-button">Retake</button>
+                </div>
+              </>
+            )
+          ) : (
+            <Camera onAutoCapture={handleCapture} userEmail={userEmail} onVideoCapture={handleVideoCapture} />
+          )}
+          <form className='register-form' onSubmit={handleSubmit}>
+            <input type="file" accept="image/*,video/*" onChange={(event) => setSelectedFile(event.target.files[0]) } />
+            <button type="submit" className="app-button" disabled={!selectedFile || loading}>Upload</button>
+          </form>
+          <button onClick={onLogout} className="Logout-button">Logout</button>
+        </>
       )}
-      <form className='register-form' onSubmit={handleSubmit}>
-        <input type="file" accept="image/*,video/*" onChange={(event) => setSelectedFile(event.target.files[0]) } />
-        <button type="submit" className="app-button" disabled={!selectedFile}>Upload</button>
-      </form>
-      <button onClick={onLogout} className="Logout-button">Logout</button>
     </div>
   );
+  
 };
 
 export default ImageUpload;

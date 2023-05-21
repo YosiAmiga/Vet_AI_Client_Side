@@ -39,7 +39,7 @@ const AddPetModal = ({ show, onHide, userEmail, onPetAdded }) => {
         onHide(); // Close the modal
         onPetAdded();// Trigger pet list update in the PetOwner component
       } else {
-        alert('Error adding new pet');
+        alert('Error: ' + Object.keys(response.data)[0]);
       }
     } catch (error) {
       console.error('Error in addNewPet', error);
