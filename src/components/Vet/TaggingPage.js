@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Camera from '../Camera';
+import Camera from '../Upload/Camera';
 import { SERVER_IP } from '../App';
 
 /**

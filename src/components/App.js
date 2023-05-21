@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
-import Login from './Login';
-import Register from './Register';
-import ImageUpload from './ImageUpload';
+import Login from './Authentication/Login';
+import Register from './Authentication/Register';
+import ImageUpload from './Upload/ImageUpload';
 import './App.css';
 import PetOwner from './Pet/PetOwner';
 import VetPage from './Vet/VetPage';

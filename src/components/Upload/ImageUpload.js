@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Camera from './Camera';
-import { SERVER_IP } from './App.js';
+import { SERVER_IP } from '../App.js';
 import { useLocation } from 'react-router-dom';
 
 /**

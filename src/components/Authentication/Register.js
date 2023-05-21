@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { SERVER_IP } from './App';
+import { SERVER_IP } from '../App';
 /**
  * The Register component renders a form for registering a new user. It takes an onRegister callback function as a prop to handle the register event.
  * @returns {JSX.Element} - A JSX element that renders a register form.
