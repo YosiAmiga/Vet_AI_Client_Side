@@ -37,7 +37,7 @@ function App() {
   return (
     <Router>
       <div className="App-header">
-        <h1>Cat Pain Detector</h1>
+        <h1>Animal Emotion Detector</h1>
         {!loggedIn && (
           <nav>
             <Link to="/login">Login</Link> | <Link to="/register">Register</Link>

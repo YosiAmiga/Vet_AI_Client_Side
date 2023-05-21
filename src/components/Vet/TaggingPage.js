@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Camera from '../Camera';
 import { SERVER_IP } from '../App';
@@ -14,6 +14,10 @@ const TaggingPage = ({ onLogout, userEmail }) => {
   const [showCamera, setShowCamera] = useState(true);
   const [tag, setTag] = useState(null);
   const [capturedVideo, setCapturedVideo] = useState(null);
+  const [petTypes, setPetTypes] = useState([]);
+  const [selectedPetType, setSelectedPetType] = useState('');
+  const [petPredictionTypes, setPetPredictionTypes] = useState([]);
+  const [selectedPredictionType, setSelectedPredictionType] = useState('');
 
   /**
    * Handles the video capture event from the camera component. Sets the captured video blob to state and hides the camera component.
@@ -45,22 +49,91 @@ const TaggingPage = ({ onLogout, userEmail }) => {
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const timestamp = new Date().toLocaleString('en-US').replace(/[/,:]/g, '-');
-    const fileName = `${userEmail}&${timestamp}.jpeg`;
     const formData = new FormData();
-    formData.append('image', selectedFile, fileName);
+    const timestamp = new Date().toLocaleString('en-US').replace(/[/,:]/g, '-');
+    let extension;
+    if (selectedFile.type.startsWith('image/')) {
+      extension = '.jpeg';
+    } else {
+      extension = '.mp4';
+    }
+    const newName = `${userEmail}&${timestamp}${extension}`;
+    const newFile = new File([selectedFile], newName, { type: selectedFile.type });
+    console.log('newFile ', newFile );
+    console.log('selectedPetType',selectedPetType);
+    console.log('selectedPredictionType',selectedPredictionType);
+
+    formData.append('image', newFile);
     formData.append('vet_email', userEmail);
     formData.append('tag', tag);
+    formData.append('type', selectedPetType);
+    formData.append('prediction', selectedPredictionType);
 
     try {
-      await axios.post(`${SERVER_IP}:5000/vet-upload`, formData);
-      alert('File uploaded and tagged successfully.');
+      const response = await axios.post(`${SERVER_IP}:5000/vet-upload`, formData);
+      if (response.data.success) {
+        alert('File uploaded and tagged successfully.');
+      } else {
+        alert('Error: ' + Object.keys(response.data)[0]);
+      }
     } catch (error) {
       console.error('Error uploading and tagging file:', error);
       alert('Error uploading and tagging file.');
     }
   };
+
+  /**
+   * Initialize pet types from the server.
+   */
+    const initPetTypes = async () => {
+      try {
+        const response = await axios.post(SERVER_IP + ':5000/get-pet-types');
+        setPetTypes(response.data);
+      } catch (error) {
+        console.error('Error in initPetTypes', error);
+        alert('Error in initPetTypes');
+      }
+    };
+
+    const processData = (data) => {
+      const map = {};
+    
+      data.forEach(([petType, predictionType]) => {
+        if (!map[petType]) {
+          map[petType] = [];
+        }
+    
+        map[petType].push(predictionType);
+      });
+    
+      return map;
+    };
+  /**
+   * Initialize pet prediction types from the server.
+   */
+      const initPetPredictionTypes = async () => {
+        try {
+          const response = await axios.post(SERVER_IP + ':5000/get-pet-prediction-types');
+          const processedData = processData(response.data);
+          setPetPredictionTypes(processedData);
+        } catch (error) {
+          console.error('Error in initPetTypes', error);
+          alert('Error in initPetTypes');
+        }
+      };
+
+  /**
+   * Call initPetTypes when the component mounts
+   */
+    useEffect(() => {
+      initPetTypes();
+      initPetPredictionTypes();
+    }, []);
   
+
+    useEffect(() => {
+      console.log('petPredictionTypes', petPredictionTypes);
+    }, [petPredictionTypes]);
 
   return (
     <div style={{ textAlign: 'center' }}>
@@ -81,6 +154,28 @@ const TaggingPage = ({ onLogout, userEmail }) => {
           accept="image/*, video/*"
           onChange={(event) => setSelectedFile(event.target.files[0])}
         />
+        <select value={selectedPetType} onChange={(event) => {
+          setSelectedPetType(event.target.value);
+          const predictionTypes = petPredictionTypes[event.target.value];
+          setSelectedPredictionType(predictionTypes ? predictionTypes[0] : '');
+        }}>
+          <option value="">Choose pet type...</option>
+          {petTypes.map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+        <br></br>
+        <select value={selectedPredictionType} onChange={(event) => setSelectedPredictionType(event.target.value)}>
+          <option value="">Choose prediction type...</option>
+          {selectedPetType && petPredictionTypes[selectedPetType].map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+
         <div>
           <label style={{ color: 'red' }}>
             <input
