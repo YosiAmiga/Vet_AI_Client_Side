@@ -38,9 +38,10 @@ function App() {
 
   return (
     <Router>
-      <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script>
+      {/* <script type="module" src="https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js"></script> */}
 
       <div className="App-header">
+      <img src={process.env.PUBLIC_URL + '/app_logo.png'} alt="App Logo" style={{ width: '320px' }}/>
         <h1>Animal Emotion Detector</h1>
         {!loggedIn && (
           <nav>

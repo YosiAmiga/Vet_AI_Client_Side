@@ -66,11 +66,13 @@ const DynamicDataTable = ({ endpoint }) => {
             responsive
             noHeader
           />
-        <button className="csv-button" onClick={downloadAsCsv}>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M4 4h12v2h-12zm0 4h12v2h-12zm0 4h12v2h-12zm0 4h12v2h-12zm16-14v16l-8 4v-20l8 4zm-10 2h-2v-2h2zm4 0h-2v-2h2zm0 4h-2v-2h2zm0 4h-2v-2h2z" />
-        </svg>
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <button className="csv-button" onClick={downloadAsCsv}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M4 4h12v2h-12zm0 4h12v2h-12zm0 4h12v2h-12zm0 4h12v2h-12zm16-14v16l-8 4v-20l8 4zm-10 2h-2v-2h2zm4 0h-2v-2h2zm0 4h-2v-2h2zm0 4h-2v-2h2z" />
+            </svg>
+          </button>
+        </div>
 
         </>
       ) : (
