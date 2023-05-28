@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { SERVER_IP } from './App';
+import { SERVER_IP } from '../App';
 
 /**
  * The Login component renders a form for logging in. It takes an onLogin callback function as a prop to handle the login event.

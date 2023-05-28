@@ -27,6 +27,7 @@ const Camera = ({ userEmail, onAutoCapture, onVideoCapture }) => {
   useEffect(() => {
     const loadModels = async () => {
       await faceapi.nets.ssdMobilenetv1.loadFromUri('/models');
+      // await faceapi.nets.faceExpressionNet.loadFromUri('/models');
       //For more features:
       //await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
       //await faceapi.nets.faceExpressionNet.loadFromUri('/models');
@@ -41,7 +42,9 @@ const Camera = ({ userEmail, onAutoCapture, onVideoCapture }) => {
   const detectFace = async () => {
     if (!videoRef.current || !stream) return;
 
-    const detections = await faceapi.detectSingleFace(videoRef.current);
+    const detections = await faceapi
+    .detectSingleFace(videoRef.current)
+    // .withFaceExpressions();
     if (detections && videoRef.current) {
       const existingCanvas = document.getElementById('overlay');
       if (existingCanvas) existingCanvas.remove();
@@ -57,6 +60,7 @@ const Camera = ({ userEmail, onAutoCapture, onVideoCapture }) => {
       faceapi.matchDimensions(canvas, displaySize);
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
       faceapi.draw.drawDetections(canvas, resizedDetections);
+      // faceapi.draw.drawFaceExpressions(canvas, resizedDetections); // Draw the face expressions
       console.log('In detect face autoCaptureActive:', autoCaptureActive);
       if (autoCaptureActive && detections.score >= 0.99) {
         handleAutoCapture();
