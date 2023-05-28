@@ -1,4 +1,4 @@
-body,html {
+body, html {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
   height: 100%;
@@ -13,29 +13,31 @@ body,html {
 .app-button {
   padding: 10px;
   margin-top: 15px;
-  background-color: #072c09;
+  background-color: #106ba3;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 7px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .app-button:hover {
-  background-color: #3e8e41;
+  background-color: #1890ff;
 }
 
-.Logout-button{
+.Logout-button {
   padding: 10px;
   margin-top: 15px;
   background-color: #ff0000;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 7px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
+
 .Logout-button:hover{
   background-color: #b41e1e;
-
 }
 
 .App-logo {
@@ -50,7 +52,7 @@ body,html {
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #001529;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -71,19 +73,20 @@ nav {
 
 nav a {
   text-decoration: none;
-  color: #048a96;
+  color: #1890ff;
   margin: 0 10px;
+  transition: color 0.3s ease;
 }
 
 nav a:hover {
-  color: #555;
+  color: #40a9ff;
 }
 
 form {
   display: inline-block;
   background-color: #fff;
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 7px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -100,22 +103,23 @@ input[type='email'] {
   margin-bottom: 10px;
   padding: 8px;
   font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
 }
 
 button {
-  background-color: #3498db;
+  background-color: #1890ff;
   color: #fff;
   border: none;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  border-radius: 3px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #2980b9;
+  background-color: #40a9ff;
 }
 
 .register-form {
@@ -153,6 +157,7 @@ button:hover {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .register-form button[type="submit"]:hover {
@@ -195,6 +200,7 @@ button:hover {
 }
 
 /* PetOwner.css */
+
 .vertical-buttons {
   display: flex;
   flex-direction: column;
@@ -206,10 +212,14 @@ button:hover {
 }
 
 .card {
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 50px;
+  background: #e0e0e0;
+  box-shadow:  20px 20px 60px #bebebe,
+               -20px -20px 60px #ffffff;
+}
+
+.card:hover {
+  background-color: #1890ff;
 }
 
 .card-body {
@@ -230,4 +240,50 @@ button:hover {
 .pet-card {
   width: 500px;
   cursor: pointer;
+}
+
+
+/*CSV Downlaod Button*/
+.csv-button {
+  --width: 100px;
+  --height: 35px;
+  --button-color: #138636;
+  width: var(--width);
+  height: var(--height);
+  background: var(--button-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.45em;
+  font-family: "Arial";
+}
+
+.csv-button:hover {
+  background: #13cc48;
+}
+
+.csv-button svg {
+  width: 20px;
+  height: 20px;
+  fill: #fff;
+}
+
+/*Admin Card*/
+
+.admin-card {
+  border-radius: 50px;
+  background: #e0e0e0;
+  box-shadow:  20px 20px 60px #bebebe,
+               -20px -20px 60px #ffffff;
+}
+.admin-card:hover {
+  background-color: #e0e0e0; /* Set the same background color as the default */
+}
+.admin-card .card-body {
+  padding: 1rem;
+}
+
+.admin-card .card-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
 }

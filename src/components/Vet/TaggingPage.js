@@ -176,7 +176,7 @@ const TaggingPage = ({ onLogout, userEmail }) => {
           ))}
         </select>
 
-        <div>
+        {/* <div>
           <label style={{ color: 'red' }}>
             <input
               type="radio"
@@ -195,8 +195,8 @@ const TaggingPage = ({ onLogout, userEmail }) => {
             />
             No Pain
           </label>
-        </div>
-        <button type="submit" disabled={!selectedFile || !tag} className="app-button" style={{ opacity: (!selectedFile || !tag) ? 0.5 : 1 }}>Submit</button>
+        </div> */}
+        <button type="submit" disabled={!selectedFile || !selectedPetType || !selectedPredictionType } className="app-button" style={{ opacity: (!selectedFile || !selectedPetType || !selectedPredictionType ) ? 0.5 : 1 }}>Submit</button>
       </form>
       <button className="Logout-button" onClick={onLogout}>Logout</button>
     </div>
