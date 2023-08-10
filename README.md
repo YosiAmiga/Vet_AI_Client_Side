@@ -28,6 +28,7 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+### Project Presentation - https://www.canva.com/design/DAFkRc_jkaU/UFM6a8W9jZszzVFPTzlTlg/edit
 ### Project overview 
 
 
